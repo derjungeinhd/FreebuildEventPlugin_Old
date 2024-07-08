@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FreebuildBauevent:jar">
+    <output-path>$PROJECT_DIR$/../../MC Server/1.21/plugins</output-path>
+    <root id="archive" name="FreebuildBauevent.jar">
+      <element id="module-output" name="de.redstone.FreebuildBauevent.main" />
+    </root>
+  </artifact>
+</component>
