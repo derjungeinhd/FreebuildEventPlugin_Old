@@ -1,0 +1,17 @@
+name: FreebuildEvent
+version: '${version}'
+main: de.redstone.freebuildevent.Main
+api-version: '1.20'
+prefix: FB
+load: STARTUP
+authors: [ RedstoneSpeaker ]
+depend:
+  - LuckPerms
+
+commands:
+  teams:
+    description: Event-Teams
+  game:
+    description: Game control command
+  whackyteamjoin:
+    description: Nix da Finger weg!
