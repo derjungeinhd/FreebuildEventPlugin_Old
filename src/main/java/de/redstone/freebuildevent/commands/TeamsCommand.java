@@ -151,11 +151,6 @@ public class TeamsCommand implements CommandExecutor {
                 } else if (args.length == 3 && !(redPerms.getPlayerAllowed(player,"teams.admin.add"))) {
                     PlayerMessenger.sendNoPermissionText(player, "teams.admin.add", false);
                 } else {
-                    //TODO Anzeige hierdrunter entfernen, nur debug
-                    /*player.sendMessage("DEBUG - Aktuelle Teams");
-                    for (Player leader : game.teamManager.getAllLeaders()) {
-                        player.sendMessage("Team von: "+ leader.getDisplayName() + " | Mitglieder: "+ game.teamManager.getTeam(leader).getMembers().toString());
-                    }*/
                     showTeamsHelp(player, 2);
                 }
                 break;
