@@ -2,6 +2,7 @@ package de.redstone.freebuildevent.commands;
 
 import de.redstone.freebuildevent.Main;
 import de.redstone.freebuildevent.game.Game;
+import de.redstone.freebuildevent.game.team.Team;
 import de.redstone.freebuildevent.lib.PlayerMessenger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,10 +45,11 @@ public class WhackTeamJoinCommand implements CommandExecutor {
             return true;
         }
 
-        game.teamManager.getTeam(Bukkit.getPlayer(args[0])).addMember(player);
+        Team teamToJoin = game.teamManager.getTeam(Bukkit.getPlayer(args[0]));
+        teamToJoin.addMember(player);
 
-        PlayerMessenger.sendMessage(player, "Du bist dem Team von "+ChatColor.GOLD+args[0]+ChatColor.WHITE+" beigetreten.");
-        PlayerMessenger.sendMessage(Objects.requireNonNull(Bukkit.getPlayer(args[0])), ChatColor.GOLD+player.getName()+ChatColor.WHITE+" ist dem Team beigetreten.");
+        PlayerMessenger.sendTeamMessage(player, "Du bist dem Team von "+ChatColor.GOLD+args[0]+ChatColor.WHITE+" beigetreten.");
+        PlayerMessenger.sendToTeam(teamToJoin, ChatColor.GOLD+player.getName()+ChatColor.WHITE+" ist dem Team beigetreten.");
 
         return true;
     }

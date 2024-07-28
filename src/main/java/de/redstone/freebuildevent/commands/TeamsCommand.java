@@ -39,9 +39,9 @@ public class TeamsCommand implements CommandExecutor {
 
         switch (args[0].toLowerCase()) {
             case "list":
-                PlayerMessenger.sendMessage(player, "Teams: ");
+                PlayerMessenger.sendTeamMessage(player, "Teams: ");
                 ArrayList<Team> teams = game.teamManager.listTeams();
-                teams.forEach((team -> PlayerMessenger.sendMessage(player, Team.toString(team))));
+                teams.forEach((team -> PlayerMessenger.sendTeamMessage(player, Team.toString(team))));
                 break;
             case "leave":
                 if (game.isRunning()) return true;
@@ -49,10 +49,11 @@ public class TeamsCommand implements CommandExecutor {
                 if (teamToLeave != null) {
                     if (teamToLeave.getLeader().equals(player)) {
                         game.teamManager.removeTeam(player);
-                        PlayerMessenger.sendMessage(player,"Du hast das Team aufgelöst.");
+                        PlayerMessenger.sendTeamMessage(player,"Du hast das Team aufgelöst");
                     } else {
                         teamToLeave.removeMember(player);
-                        PlayerMessenger.sendMessage(player,"Du hast das Team verlassen.");
+                        PlayerMessenger.sendToTeam(teamToLeave, ChatColor.GOLD+ player.getDisplayName() +ChatColor.WHITE+ " hat das Team verlassen");
+                        PlayerMessenger.sendTeamMessage(player,"Du hast das Team verlassen");
                     }
                 } else {
                     PlayerMessenger.sendNoPermissionText(player, "Du bist in keinem Team", false);
@@ -63,12 +64,12 @@ public class TeamsCommand implements CommandExecutor {
                 // Handle /teams create <Spielername> logic
                 // Example: teamsCreate(player, args[1]);
                 if (game.teamManager.doTeamExist(player)) {
-                    PlayerMessenger.sendNoPermissionText(player, "Du hast bereits ein Team.", false);
+                    PlayerMessenger.sendNoPermissionText(player, "Du hast bereits ein Team", false);
                     return true;
                 }
 
                 game.teamManager.createTeam(player);
-                PlayerMessenger.sendMessage(player, "Dein Team wurde erstellt! [T"+game.teamManager.getTeam(player).getId()+"]" );
+                PlayerMessenger.sendTeamMessage(player, "Dein Team wurde erstellt! [T"+game.teamManager.getTeam(player).getId()+"]" );
 
                 break;
 
@@ -95,7 +96,7 @@ public class TeamsCommand implements CommandExecutor {
 
                     try {
                         game.teamManager.removeTeam(player);
-                        PlayerMessenger.sendMessage(player, "Dein Team wurde aufgelöst, " + args[1]);
+                        PlayerMessenger.sendTeamMessage(player, "Dein Team wurde aufgelöst, " + args[1]);
                     } catch (Exception e) {
                         showTeamsHelp(player, 4);
                     }
@@ -123,7 +124,7 @@ public class TeamsCommand implements CommandExecutor {
                     }
 
                     try {
-                        PlayerMessenger.sendMessage(player, "Removing member of team " + args[1] + ": " + args[2]);
+                        PlayerMessenger.sendTeamMessage(player, "Removing member of team " + args[1] + ": " + args[2]);
                         game.teamManager.getTeam(Bukkit.getPlayer(args[1])).removeMember(Bukkit.getPlayer(args[2]));
                     } catch (Exception e) {
                         showTeamsHelp(player, 2);
@@ -144,7 +145,7 @@ public class TeamsCommand implements CommandExecutor {
 
                     try {
                         game.teamManager.getTeam(Bukkit.getPlayer(args[1])).addMember(Bukkit.getPlayer(args[2]));
-                        player.sendMessage("Adding member to team " + args[1] + ": " + args[2]);
+                        PlayerMessenger.sendTeamMessage(player,"Adding member to team " + args[1] + ": " + args[2]);
                     } catch (Exception e) {
                         showTeamsHelp(player, 2);
                     }
@@ -157,7 +158,7 @@ public class TeamsCommand implements CommandExecutor {
 
             case "invite":
                 if (game.isRunning()) {
-                    PlayerMessenger.sendMessage(player, "Das Spiel hat bereits begonnen.");
+                    PlayerMessenger.sendTeamMessage(player, "Das Spiel hat bereits begonnen.");
                     return true;
                 }
                 if (args.length == 2) {
@@ -165,8 +166,9 @@ public class TeamsCommand implements CommandExecutor {
                         PlayerMessenger.sendNoPermissionText(player, "Du bist kein Team-Leader", false);
                         return true;
                     }
+                    PlayerMessenger.sendToTeam(game.teamManager.getTeam(player), ChatColor.GOLD + Objects.requireNonNull(Bukkit.getPlayer(args[1])).getDisplayName() + ChatColor.WHITE + " wurde in das Team eingeladen");
                     game.teamManager.haveNowInvite(Bukkit.getPlayer(args[1]));
-                    PlayerMessenger.sendClickableText(Objects.requireNonNull(Bukkit.getPlayer(args[1])), "Du wurdest in das Team von "+ChatColor.GOLD+ player.getName()+ ChatColor.WHITE +" eingeladen!",
+                    PlayerMessenger.sendClickableTeamText(Objects.requireNonNull(Bukkit.getPlayer(args[1])), "Du wurdest in das Team von "+ChatColor.GOLD+ player.getName()+ ChatColor.WHITE +" eingeladen!",
                             "Annehmen",
                             new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/whackyteamjoin "+ player.getName()));
                 } else {
@@ -196,22 +198,22 @@ public class TeamsCommand implements CommandExecutor {
 
         switch (type) {
             case 0:
-                player.sendMessage(syntaxBasic);
+                PlayerMessenger.sendTeamMessage(player, syntaxBasic);
                 break;
             case 1:
-                player.sendMessage(syntaxCreate);
+                PlayerMessenger.sendTeamMessage(player, syntaxCreate);
                 break;
             case 2:
-                player.sendMessage(syntaxRemove);
+                PlayerMessenger.sendTeamMessage(player,syntaxRemove);
                 break;
             case 3:
-                player.sendMessage(syntaxMenu);
+                PlayerMessenger.sendTeamMessage(player, syntaxMenu);
                 break;
             case 4:
-                player.sendMessage(syntaxDisband);
+                PlayerMessenger.sendTeamMessage(player, syntaxDisband);
                 break;
             case 5:
-                player.sendMessage(syntaxInvite);
+                PlayerMessenger.sendTeamMessage(player, syntaxInvite);
                 break;
         }
     }

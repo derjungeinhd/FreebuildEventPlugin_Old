@@ -18,8 +18,27 @@ public class PlayerMessenger {
             .append("]").color(ChatColor.GRAY)
             .append(" ").color(ChatColor.WHITE)
             .build();
+
+    private static final BaseComponent prefixTeam = new ComponentBuilder()
+            .append("[").color(ChatColor.GRAY)
+            .append("FB - Team").color(ChatColor.AQUA)
+            .append("]").color(ChatColor.GRAY)
+            .append(" ").color(ChatColor.WHITE)
+            .build();
+
     public static void sendClickableText(Player player, String text, String clickableText, ClickEvent event) {
         BaseComponent[] message = new ComponentBuilder(prefix)
+                .append(text)
+                .append(" [").color(ChatColor.GRAY).event(event)
+                .append(clickableText).color(ChatColor.DARK_GREEN).event(event)
+                .append("]").color(ChatColor.GRAY).event(event)
+                .create();
+
+        player.spigot().sendMessage(message);
+    }
+
+    public static void sendClickableTeamText(Player player, String text, String clickableText, ClickEvent event) {
+        BaseComponent[] message = new ComponentBuilder(prefixTeam)
                 .append(text)
                 .append(" [").color(ChatColor.GRAY).event(event)
                 .append(clickableText).color(ChatColor.DARK_GREEN).event(event)
@@ -96,6 +115,19 @@ public class PlayerMessenger {
         );
     }
 
+    /**
+     * Send a message as the Team-System
+     * @param player Player the message should be sent to
+     * @param msg The message as a String
+     */
+    public static void sendTeamMessage(Player player, String msg) {
+        player.spigot().sendMessage(
+                new ComponentBuilder(prefixTeam)
+                        .append(msg)
+                        .build()
+        );
+    }
+
     public static void sendMessageToAllPlayers(String msg) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.spigot().sendMessage(
@@ -103,6 +135,12 @@ public class PlayerMessenger {
                             .append(msg)
                             .build()
             );
+        }
+    }
+
+    public static void sendToTeam(Team team, String msg) {
+        for (Player member : team.getMembers()) {
+            PlayerMessenger.sendTeamMessage(member, msg);
         }
     }
 

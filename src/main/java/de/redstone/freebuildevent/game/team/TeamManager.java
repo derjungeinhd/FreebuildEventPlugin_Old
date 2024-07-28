@@ -136,7 +136,7 @@ public class TeamManager {
 
         // Remove members outside the loop
         for (Player member : membersToRemove) {
-            PlayerMessenger.sendMessage(member, "Dein Team wurde aufgelöst.");
+            PlayerMessenger.sendTeamMessage(member, "Dein Team wurde aufgelöst.");
 
             team.removeMember(member);
         }
