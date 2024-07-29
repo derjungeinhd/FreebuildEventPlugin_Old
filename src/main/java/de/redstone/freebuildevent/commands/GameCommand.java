@@ -59,9 +59,10 @@ public class GameCommand implements CommandExecutor {
         if (args.length == 1 && args[0].equalsIgnoreCase("next") && redPerms.getPlayerAllowed(player, "game.admin.master")) {
             if (!game.isIntermission()) {
                 PlayerMessenger.sendMessage(player, "Dieser Befehl ist nur zwischen den Runden verfügbar.");
+                return true;
             }
 
-            game.teleportNextTeam();
+            game.teleportNextTeam(player);
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("resume") && redPerms.getPlayerAllowed(player, "game.admin.resume")) {

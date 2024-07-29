@@ -56,11 +56,12 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        PlayerMessenger.hideStatusBossbar(game.getBossbar());
         //Save teams
         game.teamManager.saveTeams();
         game.saveGameData();
         game.kill();
-        PlayerMessenger.hideStatusBossbar(game.getBossbar());
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             System.out.println("Removed tag from "+ player.getName());
             new Nametag(player).removeEverything();
