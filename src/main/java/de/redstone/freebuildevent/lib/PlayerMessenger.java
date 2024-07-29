@@ -11,6 +11,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 public class PlayerMessenger {
     private static final BaseComponent prefix = new ComponentBuilder()
             .append("[").color(ChatColor.GRAY)
@@ -183,5 +186,15 @@ public class PlayerMessenger {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.spigot().sendMessage(builder.build());
         }
+    }
+
+    public static String formatMemberList(HashSet<Player> list) {
+        StringBuilder builder = new StringBuilder();
+        for (Player player : list) {
+            builder.append(player.getDisplayName());
+            builder.append(", ");
+        }
+
+        return builder.toString();
     }
 }

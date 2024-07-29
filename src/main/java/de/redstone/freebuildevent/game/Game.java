@@ -36,7 +36,7 @@ public class Game {
     private final int[] gameArea = {0, 0, 0, 0};
     private boolean isIntermission = false;
     private GameConfig activeGameConfig;
-    private BukkitTask gameSecondRunner;
+    private final BukkitTask gameSecondRunner = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), getGameSecondRunnable(), 0, 20);;
     private GameState gameState = GameState.STOPPED;
     private int currentRound = 0;
     private int remainingRoundTime = 20;
@@ -229,7 +229,6 @@ public class Game {
             gameState = GameState.RUNNING;
             GameEvents.onGameStart(activeGameConfig.rounds()[currentRound]);
             remainingRoundTime = activeGameConfig.rounds()[currentRound].time();
-            gameSecondRunner = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), getGameSecondRunnable(), 0, 20);
             bossBar.setProgress(1);
         } else {
             gameState = GameState.STOPPED;
@@ -415,7 +414,7 @@ public class Game {
         // Check if all teams have been judged
         if (lastJudgedTeam >= currentUsedIDs.size()) {
             allJudged = true;
-            PlayerMessenger.sendMessage(player, "Alle Teams wurden bewertet. Drücke \"Nächste Runde\", um die nächste Runde zu starten");
+            PlayerMessenger.sendMessage(player, "Alle Teams wurden bewertet. Drücke erneut, um die nächste Runde zu starten");
             return;
         }
 
@@ -427,5 +426,6 @@ public class Game {
                 onlinePlayer.teleport(teamToJudge.getLeader().getLocation());
             }
         }
+        PlayerMessenger.sendMessage(player, "Aktuelles Team von: "+ teamToJudge.getLeader().getDisplayName() + " | Mitglieder: "+ PlayerMessenger.formatMemberList(teamToJudge.getMembers()));
     }
 }
