@@ -2,10 +2,15 @@ package de.redstone.freebuildevent.game;
 
 import de.redstone.freebuildevent.Main;
 import de.redstone.freebuildevent.gameconfig.GameRound;
-import org.bukkit.Bukkit;
+import de.redstone.freebuildevent.lib.PlayerMessenger;
+import org.bukkit.*;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Boss;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.util.Vector;
 
 public class GameEvents {
     public static void onGameStart(GameRound currentRound) {
@@ -33,8 +38,27 @@ public class GameEvents {
         bossBar.setTitle("Spiel wurde beendet!");
         bossBar.setProgress(1);
 
+        World w = Bukkit.getWorld("world");
+
         for (Player oPlayer : Bukkit.getOnlinePlayers()) {
-            oPlayer.sendTitle("Das Event ist beendet!", "Gewinner: "+ Main.getInstance().getGame().teamManager.getFirstTeam().getLeader().getName());
+            oPlayer.playSound(oPlayer.getLocation(), Sound.ENTITY_DOLPHIN_DEATH, 20, 1);
+            int diameter = 10; //Diameter of the circle centered on loc
+
+            for (int i = 0; i < 3; i++)
+            {
+                Location loc = oPlayer.getLocation();
+                Location newLocation = loc.add(new Vector(Math.random()-0.5, 0, Math.random()-0.5).multiply(diameter));
+                Firework firework = (Firework) w.spawnEntity(newLocation, EntityType.FIREWORK_ROCKET);
+                FireworkMeta fwm = firework.getFireworkMeta();
+
+                fwm.setPower(2);
+                fwm.addEffect(FireworkEffect.builder().withColor(Color.LIME).flicker(true).build());
+
+                firework.setFireworkMeta(fwm);
+                firework.setLife(60);
+            }
+            oPlayer.sendTitle("Das Team von " + ChatColor.GOLD + Main.getInstance().getGame().teamManager.getFirstTeam().getLeader().getDisplayName() + ChatColor.WHITE + " hat gewonnen!",
+                    "Teammitglieder: "+ PlayerMessenger.formatMemberList(Main.getInstance().getGame().teamManager.getFirstTeam().getMembers()));
         }
     }
 }
