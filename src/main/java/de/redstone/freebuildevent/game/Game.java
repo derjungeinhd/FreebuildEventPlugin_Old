@@ -110,6 +110,26 @@ public class Game {
     }
 
     /**
+     * Checks if the given coordinates are on the game border.
+     *
+     * @param x The x-coordinate to check.
+     * @param z The z-coordinate to check.
+     * @return True if the coordinates are on the game border, false otherwise.
+     */
+    public boolean isOnBorder(int x, int z) {
+        int minX = Math.min(gameArea[0], gameArea[2]);
+        int maxX = Math.max(gameArea[0], gameArea[2]);
+        int minZ = Math.min(gameArea[1], gameArea[3]);
+        int maxZ = Math.max(gameArea[1], gameArea[3]);
+
+        // Check if the block is on the border
+        boolean onXBorder = (x == minX || x == maxX) && (z >= minZ && z <= maxZ);
+        boolean onZBorder = (z == minZ || z == maxZ) && (x >= minX && x <= maxX);
+
+        return onXBorder || onZBorder;
+    }
+
+    /**
      * Gets the border coordinates of the game area.
      *
      * @return A 2D array of border coordinates.
